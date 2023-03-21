@@ -27,7 +27,6 @@ public class WordSearch {
 		
 		System.out.println("Generating grid...\nAdding words...");
 		board.fillWords(words);
-		printGrid(board.getGrid());
 		System.out.println("Filling empty cells...");
 		board.fillRemainder();
 		
