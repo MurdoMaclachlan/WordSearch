@@ -3,11 +3,13 @@ public class Cell {
 
 	private char character;
 	private String colour;
+	private final Coordinate coordinates;
 	private static final String RESET = "\033[0m";
 	
-	public Cell(char character) {
+	public Cell(char character, int x, int y) {
 		this.character = character;
 		this.colour = "";
+		this.coordinates = new Coordinate(x, y);
 	}
 	
 	public char getCharacter() {
@@ -24,6 +26,10 @@ public class Cell {
 	
 	public void setColour(String colour) {
 		this.colour = colour;
+	}
+	
+	public Coordinate getCoordinates() {
+		return coordinates;
 	}
 	
 	/**

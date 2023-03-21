@@ -27,6 +27,7 @@ public class WordSearch {
 		
 		System.out.println("Generating grid...\nAdding words...");
 		board.fillWords(words);
+		printGrid(board.getGrid());
 		System.out.println("Filling empty cells...");
 		board.fillRemainder();
 		
@@ -61,7 +62,7 @@ public class WordSearch {
 				String.format(
 					"%s: %s, [ %s, %s ]",
 					word,
-					wordLine.getCoordinates().toString(),
+					wordLine.getStartCoordinates().toString(),
 					wordLine.getDirection(),
 					wordLine.getMode()
 				)

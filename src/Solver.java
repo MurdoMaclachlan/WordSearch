@@ -35,22 +35,18 @@ public class Solver extends CoordinateManager {
 	 * 
 	 * @return  Whether the full word was found
 	 */
-	private boolean checkCar(Coordinate coords, String word) {
-		// We will need to return to the start of the word at minimum once, and
-		// usually more, so we save the coordinates of that cell here
-		Coordinate startCoords = coords.clone();
+	private boolean findLine(Coordinate coords, String word) {
 		for (String direction : DIRECTIONS) {
 			for (String mode : MODES) {
-				coords = startCoords.clone();
 				Line line = new Line(coords, direction, mode);
 				try {
-					if (!pursue(coords, line, word.substring(1))) continue;
+					if (!pursue(line, word.substring(1))) continue;
 				} catch (IndexOutOfBoundsException e) {
 					continue;
 				}
-				// If pursue() was successful, the full word was found, so record
-				// its starting coordinates and the line it follows
-				coords = startCoords.clone();
+				// If pursue() was successful, the full word was found, so record the line it
+				// follows, including its starting coordinates
+				line.resetPosition();
 				foundWords.put(word, line);				
 				return true;
 			}
@@ -66,8 +62,7 @@ public class Solver extends CoordinateManager {
 		int i = 0;
 		for (String word : foundWords.keySet()) {
 			String colour = possibleColours.toArray(new String[possibleColours.size()])[i];
-			Line line = foundWords.get(word);
-			colourWord(colour, line.getCoordinates(), line, word);
+			colourWord(colour, foundWords.get(word), word);
 			++i;
 		}
 	}
@@ -76,14 +71,13 @@ public class Solver extends CoordinateManager {
 	 * Colours a single word using colours from a predefined list.
 	 * 
 	 * @param colour  The colour to use
-	 * @param coords  The start coordinates of the word
 	 * @param line    The line to follow
 	 * @param word    The word to colour
 	 */
-	private void colourWord(String colour, Coordinate coords, Line line, String word) {
+	private void colourWord(String colour, Line line, String word) {
 		for (int i = 0; i < word.length(); ++i) {
-			grid.getCell(coords.getY(), coords.getX()).setColour(COLOURS.get(colour));
-			coords = modifyCoordinates(coords, line);
+			grid.getCell(line.getPosX(), line.getPosY()).setColour(COLOURS.get(colour));
+			advanceAlongLine(line);
 		}
 	}
 	
@@ -99,14 +93,13 @@ public class Solver extends CoordinateManager {
 	 * @return  Whether the word was found
 	 */
 	private boolean findWord(String word) {
-		for (int rowNum = 0; rowNum < grid.size(); ++rowNum) {
-			ArrayList<Cell> row = grid.getRow(rowNum);
-			for (int colNum = 0; colNum < row.size(); ++colNum)
+		for (ArrayList<Cell> row : grid) {
+			for (Cell cell : row)
 				// Upon finding a cell that matches the first letter of the word,
 				// we can use its coordinates as a start point to search adjacent
 				// cells for the rest of the word
-				if (row.get(colNum).equals(word.charAt(0)))
-					if (checkCar(new Coordinate(colNum, rowNum), word))
+				if (cell.equals(word.charAt(0)))
+					if (findLine(cell.getCoordinates(), word))
 						return true;
 		}
 		return false;
@@ -131,16 +124,16 @@ public class Solver extends CoordinateManager {
 	 * 
 	 * @return  Whether the word was found
 	 */
-	private boolean pursue(Coordinate coords, Line line, String word) {
+	private boolean pursue(Line line, String word) {
 		// The first character of the word has already been checked, so we can
 		// call modifyCoordinates() immediately to avoid duplicating that check
-		coords = modifyCoordinates(coords, line);
+		advanceAlongLine(line);
 		for (char c : word.toCharArray()) {
 			// If the current cell matches the letter we're checking, call
 			// modifyCoordinates() to step along the line and check the next cell;
 			// if not, the word isn't here and we return false
-			if (grid.getCell(coords.getY(), coords.getX()).equals(c)) {
-				coords = modifyCoordinates(coords, line);
+			if (grid.getCell(line.getPosX(), line.getPosY()).equals(c)) {
+				advanceAlongLine(line);
 			} else {
 				return false;
 			}

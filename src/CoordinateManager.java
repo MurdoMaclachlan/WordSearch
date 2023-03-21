@@ -13,19 +13,17 @@ public class CoordinateManager {
 	};
 	
 	/**
-	 * Increments or decrements given X and Y coordinates as appropriate, based on a given direction.
+	 * Advances along a given line in its defined direction, by exactly one step.
 	 * 
-	 * @param coords  The coordinates to modify
-	 * @param line    The direction to modify them in
-	 * 
-	 * @return  The modified coordinates
+	 * @param line  The line to follow
 	 */
-	protected Coordinate modifyCoordinates(Coordinate coords, Line line) {
+	protected void advanceAlongLine(Line line) {
 		// Determine whether to increment or decrement coordinates
 		int modifier = line.getMode().equals("forward") ? 1 : -1;
 		
-		int x = coords.getX();
-		int y = coords.getY();
+		Coordinate currentCoordinates = line.getCurrentCoordinates();
+		int x = currentCoordinates.getX();
+		int y = currentCoordinates.getY();
 		
 		// Note that, for the purposes of the grid, the origin point, 0, exists at the top-left corner.  Thus, for each
 		// step DOWN, the Y coordinate increments, as opposed to the more standard UP correlation in the Cartesian
@@ -51,7 +49,6 @@ public class CoordinateManager {
 			}
 		}
 		
-		coords.setCoordinates(x, y);
-		return coords;
+		currentCoordinates.setCoordinates(x, y);
 	}
 }

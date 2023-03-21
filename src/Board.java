@@ -8,6 +8,7 @@ public class Board extends CoordinateManager {
 	int timeout;
 	
 	Grid grid;
+	Random random = new Random();
 	
 	public Board(int size, int timeout) {
 		this.size = size;
@@ -27,15 +28,13 @@ public class Board extends CoordinateManager {
 	 * 
 	 * @return  Whether the word was successfully added
 	 */
-	public boolean addWord(Coordinate coords, Line line, String word) {
-		Coordinate startCoords = coords.clone();
-		
+	public boolean addWord(Line line, String word) {
 		for (char c : word.toCharArray()) {
-			Cell cell = grid.getCell(coords.getY(), coords.getX());
+			Cell cell = grid.getCell(line.getPosX(), line.getPosY());
 			// We can only insert a character into any cell that is empty or already contains that
 			// letter; otherwise we'd overwrite words we already added.
 			if (cell.equals(c) || cell.equals(' ')) {
-				coords = modifyCoordinates(coords, line);
+				advanceAlongLine(line);
 			} else {
 				return false;
 			}
@@ -43,10 +42,10 @@ public class Board extends CoordinateManager {
 		
 		// Insert the word into the board, using the starting coordinates and moving down the
 		// same line, this time actually setting the characters
-		coords = startCoords;
+		line.resetPosition();
 		for (char c : word.toCharArray()) {
-			grid.getCell(coords.getY(), coords.getX()).setCharacter(c);
-			coords = modifyCoordinates(coords, line);
+			grid.getCell(line.getPosX(), line.getPosY()).setCharacter(c);
+			advanceAlongLine(line);
 		}
 		
 		return true;
@@ -56,11 +55,10 @@ public class Board extends CoordinateManager {
 	 * Fills all empty cells on the grid with random alphabetical characters.
 	 */
 	public void fillRemainder() {
-		Random r = new Random();
 		for (ArrayList<Cell> row : grid) {
 			for (Cell cell : row) {
 				if (cell.equals(' ')) {
-					cell.setCharacter(Character.toUpperCase(((char)('a' + r.nextInt(26)))));
+					cell.setCharacter(Character.toUpperCase(((char)('a' + random.nextInt(26)))));
 				}
 			}
 		}
@@ -72,7 +70,6 @@ public class Board extends CoordinateManager {
 	 * @param words  The words to add
 	 */
 	public void fillWords(String[] words) {
-		Random r = new Random();
 		boolean success;
 		int attempts;
 		
@@ -84,13 +81,13 @@ public class Board extends CoordinateManager {
 			// and directions until we either succeed or time out
 			while (!success && attempts < timeout) {
 				++attempts;
-				Coordinate coords = new Coordinate(r.nextInt(size), r.nextInt(size));
-				Line line = new Line(coords, DIRECTIONS[r.nextInt(4)], MODES[r.nextInt(2)]);
+				Coordinate coords = new Coordinate(random.nextInt(size), random.nextInt(size));
+				Line line = new Line(coords, DIRECTIONS[random.nextInt(4)], MODES[random.nextInt(2)]);
 				
 				// An IndexOutOfBoundsException will occur if the word runs past the edge of the board, so we
-				// have to catch that
+				// have to catch it. Given it just signifies a failure, we don't need to do anything with it.
 				try {
-					success = addWord(coords, line, word);
+					success = addWord(line, word);
 				} catch (IndexOutOfBoundsException e) {
 					;
 				}
@@ -113,11 +110,10 @@ public class Board extends CoordinateManager {
 	 */
 	public void generateEmptyGrid() {
 		 grid = new Grid();
-		 ArrayList<Cell> row;
-		 for (int i = 0; i < size; ++i) {
-			 row = new ArrayList<Cell>();
-			 for (int j = 0; j < size; ++j)
-				 row.add(new Cell(' '));
+		 for (int y = 0; y < size; ++y) {
+			 ArrayList<Cell> row = new ArrayList<Cell>();
+			 for (int x = 0; x < size; ++x)
+				 row.add(new Cell(' ', x, y));
 			 grid.addRow(row);
 		 }
 	}
