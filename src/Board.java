@@ -83,7 +83,7 @@ public class Board extends CoordinateManager {
 			// The easiest way to insert each word is to simply loop, choosing random coordinates
 			// and directions until we either succeed or time out
 			while (!success && attempts < timeout) {
-				attempts++;
+				++attempts;
 				Coordinate coords = new Coordinate(r.nextInt(size), r.nextInt(size));
 				Line line = new Line(coords, DIRECTIONS[r.nextInt(4)], MODES[r.nextInt(2)]);
 				
@@ -100,7 +100,7 @@ public class Board extends CoordinateManager {
 					System.out.println(
 						String.format("Failed to add %s; timed out on too many failed attempts.", word)
 					);
-					failedWordCount++;
+					++failedWordCount;
 					break;
 				}
 			}
