@@ -4,14 +4,14 @@ import java.util.Set;
 
 public class Solver extends CoordinateManager {
 	
-	private Board board;
+	private Grid grid;
 	private HashMap<String, Line> foundWords;
 	private ArrayList<String> failedWords;
 	
 	private static final HashMap<String, String> COLOURS = 
 			new HashMap<String, String>();
 	
-	public Solver(Board board) {
+	public Solver(Grid grid) {
 		COLOURS.put("red", "\u001B[31m");
 		COLOURS.put("green", "\u001B[32m");
 		COLOURS.put("yellow", "\u001B[33m");
@@ -20,7 +20,7 @@ public class Solver extends CoordinateManager {
 		COLOURS.put("cyan", "\u001B[36m");
 		COLOURS.put("white", "\u001B[37m");
 		
-		this.board = board;
+		this.grid = grid;
 		foundWords = new HashMap<String, Line>();
 		failedWords = new ArrayList<String>();
 	}
@@ -81,9 +81,8 @@ public class Solver extends CoordinateManager {
 	 * @param word    The word to colour
 	 */
 	private void colourWord(String colour, Coordinate coords, Line line, String word) {
-		ArrayList<ArrayList<Cell>> grid = board.getGrid();
 		for (int i = 0; i < word.length(); ++i) {
-			grid.get(coords.getY()).get(coords.getX()).setColour(COLOURS.get(colour));
+			grid.getCell(coords.getY(), coords.getX()).setColour(COLOURS.get(colour));
 			coords = modifyCoordinates(coords, line);
 		}
 	}
@@ -100,9 +99,8 @@ public class Solver extends CoordinateManager {
 	 * @return  Whether the word was found
 	 */
 	private boolean findWord(String word) {
-		ArrayList<ArrayList<Cell>> grid = board.getGrid();
 		for (int rowNum = 0; rowNum < grid.size(); ++rowNum) {
-			ArrayList<Cell> row = grid.get(rowNum);
+			ArrayList<Cell> row = grid.getRow(rowNum);
 			for (int colNum = 0; colNum < row.size(); ++colNum)
 				// Upon finding a cell that matches the first letter of the word,
 				// we can use its coordinates as a start point to search adjacent
@@ -134,7 +132,6 @@ public class Solver extends CoordinateManager {
 	 * @return  Whether the word was found
 	 */
 	private boolean pursue(Coordinate coords, Line line, String word) {
-		ArrayList<ArrayList<Cell>> grid = board.getGrid();
 		// The first character of the word has already been checked, so we can
 		// call modifyCoordinates() immediately to avoid duplicating that check
 		coords = modifyCoordinates(coords, line);
@@ -142,7 +139,7 @@ public class Solver extends CoordinateManager {
 			// If the current cell matches the letter we're checking, call
 			// modifyCoordinates() to step along the line and check the next cell;
 			// if not, the word isn't here and we return false
-			if (grid.get(coords.getY()).get(coords.getX()).equals(c)) {
+			if (grid.getCell(coords.getY(), coords.getX()).equals(c)) {
 				coords = modifyCoordinates(coords, line);
 			} else {
 				return false;

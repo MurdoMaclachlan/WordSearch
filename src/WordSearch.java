@@ -39,10 +39,10 @@ public class WordSearch {
 			System.out.println("All words successfully added.\n");
 		}
 		
-		printGrid(board.getGrid());
+		Grid grid = board.getGrid();
+		printGrid(grid);
 		
-		Solver solver = new Solver(board);
-		
+		Solver solver = new Solver(grid);
 		solver.solve(words);
 		ArrayList<String> failedWords = solver.getFailedWords();
 		if (failedWords.size() > 0) {
@@ -51,7 +51,7 @@ public class WordSearch {
 				System.out.println(word);
 		}
 		System.out.println("\nThe solved board is:\n");
-		printGrid(board.getGrid());
+		printGrid(grid);
 		
 		System.out.println("\nPositions and directions of all words:\n");
 		HashMap<String, Line> foundWords = solver.getFoundWords();
@@ -101,7 +101,7 @@ public class WordSearch {
 	 * 
 	 * @param grid  The grid to print
 	 */
-	private void printGrid(ArrayList<ArrayList<Cell>> grid) {
+	private void printGrid(Grid grid) {
 		for (ArrayList<Cell> row : grid) {
 			for (Cell cell : row) {
 				System.out.print(cell.toString());

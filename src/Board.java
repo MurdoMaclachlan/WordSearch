@@ -7,7 +7,7 @@ public class Board extends CoordinateManager {
 	int size;
 	int timeout;
 	
-	ArrayList<ArrayList<Cell>> grid;
+	Grid grid;
 	
 	public Board(int size, int timeout) {
 		this.size = size;
@@ -31,9 +31,9 @@ public class Board extends CoordinateManager {
 		Coordinate startCoords = coords.clone();
 		
 		for (char c : word.toCharArray()) {
-			Cell cell = grid.get(coords.getY()).get(coords.getY());
+			Cell cell = grid.getCell(coords.getY(), coords.getX());
 			// We can only insert a character into any cell that is empty or already contains that
-			// letter; otherwise we'd words we already added.
+			// letter; otherwise we'd overwrite words we already added.
 			if (cell.equals(c) || cell.equals(' ')) {
 				coords = modifyCoordinates(coords, line);
 			} else {
@@ -45,7 +45,7 @@ public class Board extends CoordinateManager {
 		// same line, this time actually setting the characters
 		coords = startCoords;
 		for (char c : word.toCharArray()) {
-			grid.get(coords.getY()).get(coords.getX()).setCharacter(c);
+			grid.getCell(coords.getY(), coords.getX()).setCharacter(c);
 			coords = modifyCoordinates(coords, line);
 		}
 		
@@ -112,14 +112,13 @@ public class Board extends CoordinateManager {
 	 * is a row, and each character is a single cell on  a given row.
 	 */
 	public void generateEmptyGrid() {
-		 grid = new ArrayList<ArrayList<Cell>>();
-		 ArrayList<Cell> item;
+		 grid = new Grid();
+		 ArrayList<Cell> row;
 		 for (int i = 0; i < size; ++i) {
-			 item = new ArrayList<Cell>();
-			 for (int j = 0; j < size; ++j) {
-				 item.add(new Cell(' '));
-			 }
-			 grid.add(item);
+			 row = new ArrayList<Cell>();
+			 for (int j = 0; j < size; ++j)
+				 row.add(new Cell(' '));
+			 grid.addRow(row);
 		 }
 	}
 	
@@ -137,7 +136,7 @@ public class Board extends CoordinateManager {
 	 * 
 	 * @return  The grid
 	 */
-	public ArrayList<ArrayList<Cell>> getGrid() {
+	public Grid getGrid() {
 		return grid;
 	}
 }
