@@ -1,4 +1,11 @@
-
+/**
+ * Represents a single cell on a grid. Stores the character to be printed at
+ * said cell, the colour to print it in, and its coordinates. Also provides
+ * a number of methods for interacting with and updating its data, as well as
+ * comparing it to other cells.
+ * 
+ * @author Murdo B. Maclachlan
+ */
 public class Cell {
 
 	private char character;
@@ -12,22 +19,47 @@ public class Cell {
 		this.coordinates = new Coordinate(x, y);
 	}
 	
+	/**
+	 * Fetch the character stored in the Cell.
+	 * 
+	 * @return  The character stored in the Cell
+	 */
 	public char getCharacter() {
 		return character;
 	}
 	
+	/**
+	 * Set the character stored in the Cell.
+	 * 
+	 * @param character  The new character to store in the Cell
+	 */
 	public void setCharacter(char character) {
 		this.character = character;
 	}
 	
+	/**
+	 * Fetch the colour associated with the Cell.
+	 * 
+	 * @return  The colour associated with the Cell
+	 */
 	public String getColour() {
 		return colour;
 	}
 	
+	/**
+	 * Set the colour associated with the Cell.
+	 * 
+	 * @param colour  The new colour to associate with the Cell
+	 */
 	public void setColour(String colour) {
 		this.colour = colour;
 	}
 	
+	/**
+	 * Fetch the coordinates for the Cell.
+	 * 
+	 * @return  The coordinates for the Cell
+	 */
 	public Coordinate getCoordinates() {
 		return coordinates;
 	}

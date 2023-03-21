@@ -1,5 +1,11 @@
-
-public class CoordinateManager {
+/**
+ * A simple base class for storing directions and allowing coordinates to be
+ * modified based on information about a line to follow. Provides a basis for
+ * properly implemented coordinate systems, such as Board and Solver.
+ * 
+ * @author Murdo B. Maclachlan
+ */
+public class CoordinateSystem {
 
 	protected static final String[] DIRECTIONS = {
 		"diagonal_down",

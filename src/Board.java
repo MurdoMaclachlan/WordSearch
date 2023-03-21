@@ -1,7 +1,15 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Board extends CoordinateManager {
+/**
+ * Represents the board for a word search puzzle. Capable of generating an empty
+ * Grid of a given size, adding given words to that grid, and filling out any
+ * remaining empty spaces with random letters. Everything necessary to create a
+ * basic word search.
+ * 
+ * @author Murdo B. Maclachlan
+ */
+public class Board extends CoordinateSystem {
 	
 	int failedWordCount;
 	int size;

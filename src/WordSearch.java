@@ -4,6 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Main class to run the word search generation and solution program.
+ * 
+ * @author Murdo B. Maclachlan
+ */
 public class WordSearch {
 	
 	private static final int WORD_COUNT = 10;
@@ -20,6 +25,10 @@ public class WordSearch {
 	
 	/**
 	 * The primary program.
+	 * 
+	 * Generates a word search using words from user input, prints it, then attempts to
+	 * solve it and prints its solution, complete or partial, noting any words it failed
+	 * to find in its generated Board.
 	 */
 	public void run() {
 		String[] words = fetchWords(WORD_COUNT);	

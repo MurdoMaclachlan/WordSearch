@@ -2,7 +2,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-public class Solver extends CoordinateManager {
+/**
+ * A utility class for solving a given word search, represented by a fully formed
+ * Grid. Provides the ability to look for given words on the word search Grid,
+ * records all words it finds and all it fails to find, and provides the ability
+ * to colour in words it finds, highlighting them on the Grid.
+ * 
+ * @author Murdo B. Maclachlan
+ */
+public class Solver extends CoordinateSystem {
 	
 	private Grid grid;
 	private HashMap<String, Line> foundWords;
