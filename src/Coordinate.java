@@ -33,4 +33,8 @@ public class Coordinate {
 	public Coordinate clone() {
 		return new Coordinate(this.x, this.y);
 	}
+	
+	public String toString() {
+		return String.format("[ x: %d, y: %d ]", x, y);
+	}
 }

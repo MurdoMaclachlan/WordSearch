@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
 public class WordSearch {
 	
-	Board board;
-	int wordCount = 10;
+	private static final int WORD_COUNT = 10;
 	
 	/**
 	 * Program entry point.
@@ -22,9 +22,9 @@ public class WordSearch {
 	 * The primary program.
 	 */
 	public void run() {
-		String[] words = fetchWords(wordCount);
+		String[] words = fetchWords(WORD_COUNT);	
+		Board board = new Board(getMaxStringLength(words) + 5, 100);
 		
-		board = new Board(getMaxStringLength(words) + 5, 100);
 		System.out.println("Generating grid...\nAdding words...");
 		board.fillWords(words);
 		System.out.println("Filling empty cells...");
@@ -36,10 +36,37 @@ public class WordSearch {
 				String.format("Failed to add %d word(s)", failedWordCount)
 			);
 		} else {
-			System.out.println("All words successfully added.");
+			System.out.println("All words successfully added.\n");
 		}
 		
 		printGrid(board.getGrid());
+		
+		Solver solver = new Solver(board);
+		
+		solver.solve(words);
+		ArrayList<String> failedWords = solver.getFailedWords();
+		if (failedWords.size() > 0) {
+			System.out.println("\nFailed the following words:");
+			for (String word : failedWords)
+				System.out.println(word);
+		}
+		System.out.println("\nThe solved board is:\n");
+		printGrid(board.getGrid());
+		
+		System.out.println("\nPositions and directions of all words:\n");
+		HashMap<String, Line> foundWords = solver.getFoundWords();
+		for (String word : foundWords.keySet()) {
+			Line wordLine = foundWords.get(word);
+			System.out.println(
+				String.format(
+					"%s: %s, [ %s, %s ]",
+					word,
+					wordLine.getCoordinates().toString(),
+					wordLine.getDirection(),
+					wordLine.getMode()
+				)
+			);
+		}
 	}
 	
 	/**
@@ -74,10 +101,10 @@ public class WordSearch {
 	 * 
 	 * @param grid  The grid to print
 	 */
-	private void printGrid(ArrayList<ArrayList<Character>> grid) {
-		for (ArrayList<Character> row : grid) {
-			for (Character cell : row) {
-				System.out.print(cell);
+	private void printGrid(ArrayList<ArrayList<Cell>> grid) {
+		for (ArrayList<Cell> row : grid) {
+			for (Cell cell : row) {
+				System.out.print(cell.toString());
 				System.out.print(' ');
 			}
 			System.out.print('\n');
