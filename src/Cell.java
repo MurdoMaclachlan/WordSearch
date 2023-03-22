@@ -85,7 +85,7 @@ public class Cell {
 	 */
 	public boolean equals(Object o) {
 		if (o instanceof Cell)
-			return this.coordinates == ((Cell)o).getCoordinates();
+			return this.coordinates.equals(((Cell)o).getCoordinates());
 		return false;
 	}
 	
