@@ -76,9 +76,8 @@ public class Cell {
 	}
 	
 	/**
-	 * Determine if the Cell is equal to a given Object. A cell is considered
-	 * equal the given Object is another Cell, and their its coordinates and
-	 * characters match.
+	 * Determine if the Cell is equal to a given Object. A Cell is considered equal if the
+	 * given Object is another Cell, and their coordinates match.
 	 * 
 	 * @param o  The Object to compare with
 	 * 
@@ -86,7 +85,7 @@ public class Cell {
 	 */
 	public boolean equals(Object o) {
 		if (o instanceof Cell)
-			return this.character == ((Cell)o).getCharacter() && this.colour == ((Cell)o).getColour();
+			return this.coordinates == ((Cell)o).getCoordinates();
 		return false;
 	}
 	

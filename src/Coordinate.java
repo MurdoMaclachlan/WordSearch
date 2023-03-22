@@ -69,6 +69,20 @@ public class Coordinate {
 	}
 	
 	/**
+	 * Determine if the Coordinate is equal to a given Object. A Coordinate is considered
+	 * equal if the given Object is another Coordinate, and their X and Y values match.
+	 * 
+	 * @param o  The Object to compare with
+	 * 
+	 * @return  Whether the Coordinate is equal to the Object
+	 */
+	public boolean equals(Object o) {
+		if (o instanceof Coordinate)
+			return this.x == ((Coordinate)o).getX() && this.y == ((Coordinate)o).getY();
+		return false;
+	}
+	
+	/**
 	 * Returns a string representation of the Coordinate.
 	 */
 	public String toString() {
