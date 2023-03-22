@@ -11,7 +11,8 @@ import java.util.Scanner;
  */
 public class WordSearch {
 	
-	private static final int WORD_COUNT = 10;
+	private boolean colourFoundWords = false;
+	private int wordCount = 10;
 	
 	/**
 	 * Program entry point.
@@ -20,6 +21,7 @@ public class WordSearch {
 	 */
 	public static void main(String[] args) {
 		WordSearch wordSearch = new WordSearch();
+		wordSearch.processArguments(args);
 		wordSearch.run();
 	}
 	
@@ -31,7 +33,7 @@ public class WordSearch {
 	 * to find in its generated Board.
 	 */
 	public void run() {
-		String[] words = fetchWords(WORD_COUNT);	
+		String[] words = fetchWords(wordCount);
 		Board board = new Board(getMaxStringLength(words) + 5, 100);
 		
 		System.out.println("Generating grid...\nAdding words...");
@@ -59,6 +61,7 @@ public class WordSearch {
 			for (String word : failedWords)
 				System.out.println(word);
 		}
+		if (colourFoundWords) solver.colourFoundWords();
 		System.out.println("\nThe solved board is:\n");
 		printGrid(grid);
 		
@@ -117,6 +120,33 @@ public class WordSearch {
 				System.out.print(' ');
 			}
 			System.out.print('\n');
+		}
+	}
+	
+	/**
+	 * Process any command-line arguments.
+	 * 
+	 * @param args  The list of command-line arguments
+	 */
+	private void processArguments(String[] args) {
+		for (int i = 0; i < args.length; ++i) {
+			String arg = args[i];
+			switch (arg) {
+				case "-c", "--colour" -> {
+					colourFoundWords = true;
+				}
+				case "-w", "--word-count" -> {
+					try {
+						wordCount = Integer.parseInt(args[i+1]);
+					} catch (NumberFormatException e) {
+						System.out.println(arg + " was provided, but not succeeded by a number. Defaulting to word count of 10.");
+					}
+				}
+				default -> {
+					if (!(args[i-1].equals("-w") || args[i-1].equals("--word-count")))
+							System.out.println("Unknown argument: " + arg);
+				}
+			}
 		}
 	}
 	

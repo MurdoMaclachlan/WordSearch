@@ -65,7 +65,7 @@ public class Solver extends CoordinateSystem {
 	/**
 	 * Iterates through all the found words and colours them in.
 	 */
-	public void colourAllWords() {
+	public void colourFoundWords() {
 		Set<String> possibleColours = COLOURS.keySet();
 		int i = 0;
 		for (String word : foundWords.keySet()) {
