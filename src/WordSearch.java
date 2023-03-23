@@ -34,34 +34,16 @@ public class WordSearch {
 	 */
 	public void run() {
 		String[] words = fetchWords(wordCount);
+		
 		Board board = new Board(getMaxStringLength(words) + 5, 100);
-		
-		System.out.println("Generating grid...\nAdding words...");
-		board.fillWords(words);
-		System.out.println("Filling empty cells...");
-		board.fillRemainder();
-		
-		int failedWordCount = board.getFailedWordCount();
-		if (failedWordCount > 0) {
-			System.out.println(
-				String.format("Failed to add %d word(s)", failedWordCount)
-			);
-		} else {
-			System.out.println("All words successfully added.\n");
-		}
+		initialiseBoard(board, words);
 		
 		Grid grid = board.getGrid();
 		printGrid(grid);
 		
 		Solver solver = new Solver(grid);
-		solver.solve(words);
-		ArrayList<String> failedWords = solver.getFailedWords();
-		if (failedWords.size() > 0) {
-			System.out.println("\nFailed the following words:");
-			for (String word : failedWords)
-				System.out.println(word);
-		}
-		if (colourFoundWords) solver.colourFoundWords();
+		solveBoard(solver, words);
+		
 		System.out.println("\nThe solved board is:\n");
 		printGrid(grid);
 		
@@ -79,6 +61,45 @@ public class WordSearch {
 				)
 			);
 		}
+	}
+	
+	/**
+	 * Initialises the board while printing relevant console output.
+	 * 
+	 * @param board  The board to initialise
+	 * @param words  The words for the board
+	 */
+	private void initialiseBoard(Board board, String[] words) {
+		System.out.println("Generating grid...\nAdding words...");
+		board.fillWords(words);
+		System.out.println("Filling empty cells...");
+		board.fillRemainder();
+		
+		int failedWordCount = board.getFailedWordCount();
+		if (failedWordCount > 0) {
+			System.out.println(
+				String.format("Failed to add %d word(s)", failedWordCount)
+			);
+		} else {
+			System.out.println("All words successfully added.\n");
+		}
+	}
+	
+	/**
+	 * Solves the board while printing relevant console output.
+	 * 
+	 * @param solver  The solver
+	 * @param words   The words find
+	 */
+	private void solveBoard(Solver solver, String[] words) {
+		solver.solve(words);
+		ArrayList<String> failedWords = solver.getFailedWords();
+		if (failedWords.size() > 0) {
+			System.out.println("\nFailed the following words:");
+			for (String word : failedWords)
+				System.out.println(word);
+		}
+		if (colourFoundWords) solver.colourFoundWords();
 	}
 	
 	/**
