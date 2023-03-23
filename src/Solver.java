@@ -113,10 +113,20 @@ public class Solver extends CoordinateSystem {
 		return false;
 	}
 	
+	/**
+	 * Fetch the list of words the Solver failed to find.
+	 * 
+	 * @return  The failed words
+	 */
 	public ArrayList<String> getFailedWords() {
 		return failedWords;
 	}
 	
+	/**
+	 * Fetch the map of words the Solver successfully found, and their mapped Lines
+	 * 
+	 * @return  The found words
+	 */
 	public HashMap<String, Line> getFoundWords() {
 		return foundWords;
 	}
